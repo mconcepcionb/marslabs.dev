@@ -1,0 +1,14 @@
+.git
+.gitignore
+.github
+node_modules
+dist
+.astro
+.vscode
+.env
+lefthook.yml
+biome.json
+knip.json
+.editorconfig
+Dockerfile
+.dockerignore

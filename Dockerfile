@@ -3,7 +3,10 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# --ignore-scripts: dentro de la imagen no hay repo git ni hacen falta los git
+# hooks (el script `prepare` → `lefthook install` fallaría). esbuild/rollup
+# funcionan igual: sus binarios vienen en optionalDependencies.
+RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
