@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { CONTACT_EMAIL } from '../consts';
+
+const services = [
+  {
+    title: 'Aplicaciones',
+    desc: 'Apps web y herramientas a medida. De la idea al producto, con decisiones de arquitectura validadas antes de comprometerlas.',
+    icon: '◈',
+  },
+  {
+    title: 'Webs',
+    desc: 'Sites estáticos y de contenido (SSG), rápidos y sin CMS frágil. Diseño de sistema, SEO y rendimiento medido, no estimado.',
+    icon: '◎',
+  },
+  {
+    title: 'Sistemas & infra',
+    desc: 'Gestión de servidores, despliegue, homelab e infraestructura reproducible. Automatización y observabilidad.',
+    icon: '▣',
+  },
+];
+---
+<Layout>
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-6 pt-24 pb-16 text-center">
+    <img
+      src="/brand/marslabs-emblem-dark@2x.png"
+      alt="Mars Labs"
+      width="128"
+      height="128"
+      class="mx-auto mb-8 h-32 w-32 rounded-2xl"
+      loading="eager"
+    />
+    <p class="text-accent font-medium tracking-[0.3em] text-xs uppercase mb-4">
+      Desarrollo · Infraestructura · Medios
+    </p>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-balance">
+      Ingeniería que se <span class="text-primary">mide</span>, no que se promete
+    </h1>
+    <p class="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+      Mars Labs construye aplicaciones, webs y sistemas. Cada arquitectura se
+      valida con evidencia real antes de proponerla — mismo método, a cualquier
+      escala.
+    </p>
+    <div class="mt-10 flex flex-wrap justify-center gap-4">
+      <a
+        href="/contacto"
+        class="rounded-lg bg-primary text-primary-foreground font-semibold px-6 py-3 hover:opacity-90 transition-opacity"
+      >Hablemos de tu proyecto</a>
+      <a
+        href="/proyectos"
+        class="rounded-lg border border-border px-6 py-3 font-semibold hover:border-accent/60 hover:text-accent transition-colors"
+      >Ver trabajo</a>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold tracking-tight mb-8 text-center">Servicios</h2>
+    <div class="grid sm:grid-cols-3 gap-6">
+      {
+        services.map((s) => (
+          <article class="rounded-xl border border-border bg-card p-6 hover:border-accent/40 transition-colors">
+            <div class="text-2xl text-primary mb-4">{s.icon}</div>
+            <h3 class="font-semibold text-lg mb-2">{s.title}</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Cómo se trabaja -->
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold tracking-tight mb-8 text-center">Cómo se trabaja</h2>
+    <div class="grid sm:grid-cols-2 gap-6">
+      <article class="rounded-xl border border-border bg-card p-6">
+        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">01</span> Alcance cerrado, cosa por cosa</h3>
+        <p class="text-sm text-muted-foreground leading-relaxed">Documento vivo donde cada grupo de trabajo se cierra por separado. Nada no solicitado; lo descartado, anotado.</p>
+      </article>
+      <article class="rounded-xl border border-border bg-card p-6">
+        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">02</span> Arquitectura validada con medición</h3>
+        <p class="text-sm text-muted-foreground leading-relaxed">Spikes con números reales antes de defender una decisión: tiempos de build, pesos, CLS. Las ideas sin medir no se proponen.</p>
+      </article>
+      <article class="rounded-xl border border-border bg-card p-6">
+        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">03</span> Precio transparente</h3>
+        <p class="text-sm text-muted-foreground leading-relaxed">Días-persona con rangos min–max, año prorrateado y mantenimiento aparte. Sabes qué pagas y por qué desde el día uno.</p>
+      </article>
+      <article class="rounded-xl border border-border bg-card p-6">
+        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">04</span> Mantenimiento real</h3>
+        <p class="text-sm text-muted-foreground leading-relaxed">Lo que se entrega se mantiene: despliegues reproducibles, observabilidad y un canal directo después de la entrega.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-5xl mx-auto px-6 py-16 text-center">
+    <div class="rounded-2xl border border-border bg-card p-10">
+      <h2 class="text-2xl font-bold tracking-tight mb-3">¿Tienes un proyecto en mente?</h2>
+      <p class="text-muted-foreground mb-6 max-w-xl mx-auto">
+        Escríbeme y lo desglosamos cosa por cosa, con una propuesta medible antes de comprometer nada.
+      </p>
+      <a href={`mailto:${CONTACT_EMAIL}`} class="rounded-lg bg-accent text-accent-foreground font-semibold px-6 py-3 hover:opacity-90 transition-opacity">
+        {CONTACT_EMAIL}
+      </a>
+    </div>
+  </section>
+</Layout>

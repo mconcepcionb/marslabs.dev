@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="Mars Labs">
+  <defs>
+    <radialGradient id="marsG" cx="36%" cy="30%" r="82%">
+      <stop offset="0%" stop-color="#FFB98A"/>
+      <stop offset="42%" stop-color="#FF7A45"/>
+      <stop offset="100%" stop-color="#D8481F"/>
+    </radialGradient>
+  </defs>
+
+  <!-- marca: Marte estilizado -->
+  <g transform="translate(170,160)">
+    <circle r="96" fill="url(#marsG)"/>
+    <g fill="#9C2E18" opacity="0.78">
+      <circle cx="-38" cy="-34" r="17"/>
+      <circle cx="16" cy="-46" r="10"/>
+      <circle cx="34" cy="26" r="21"/>
+      <circle cx="-22" cy="44" r="13"/>
+      <circle cx="4" cy="-10" r="7"/>
+    </g>
+    <g fill="#7C2312" opacity="0.55">
+      <circle cx="-56" cy="20" r="9"/>
+      <circle cx="52" cy="-14" r="8"/>
+    </g>
+    <path d="M-84 -46 A96 96 0 0 1 46 -84" fill="none" stroke="#FFE0C8" stroke-width="5" opacity="0.55" stroke-linecap="round"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="330" y="176" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="104" font-weight="800" letter-spacing="-1" fill="#0B0E13">Mars<tspan fill="#0B0E13"> </tspan><tspan font-weight="500" fill="#3A4149">Labs</tspan></text>
+  <rect x="332" y="204" width="392" height="8" rx="4" fill="#26D0F0"/>
+  <text x="334" y="252" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="30" font-weight="500" letter-spacing="3" fill="#6B7480">DESARROLLO · INFRAESTRUCTURA · MEDIOS</text>
+</svg>

@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Servicios — Mars Labs">
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Servicios</h1>
+    <p class="text-muted-foreground max-w-2xl mb-12">
+      Tres líneas de trabajo, un mismo método: definir el alcance, validar la
+      arquitectura con medición real y entregar con criterios de aceptación explícitos.
+    </p>
+
+    <div class="space-y-8">
+      <article class="rounded-2xl border border-border bg-card p-8">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl text-primary">◈</span>
+          <div>
+            <h2 class="text-xl font-bold mb-2">Aplicaciones</h2>
+            <p class="text-sm text-muted-foreground leading-relaxed mb-4">
+              Desarrollo de aplicaciones web a medida: herramientas internas,
+              paneles, automatizaciones y productos. Arquitectura validada con
+              spike antes de comprometer stack, y extensibilidad modelada como
+              dato desde el día uno.
+            </p>
+            <ul class="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Aplicaciones web y herramientas internas</li>
+              <li>Automatizaciones y pipelines de datos</li>
+              <li>Integraciones con APIs y servicios</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border border-border bg-card p-8">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl text-primary">◎</span>
+          <div>
+            <h2 class="text-xl font-bold mb-2">Webs</h2>
+            <p class="text-sm text-muted-foreground leading-relaxed mb-4">
+              Websites y portales de contenido sobre estáticos (SSG):
+              rápidos, seguros y baratos de mantener, con sistema de diseño
+              propio y SEO medido. Migraciones y reingeniería de sites
+              existentes incluidas.
+            </p>
+            <ul class="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Sites estáticos y blogs (Astro, SSG)</li>
+              <li>Sistemas de diseño y tokens de marca</li>
+              <li>Auditoría y reingeniería de webs existentes</li>
+              <li>SEO técnico, rendimiento y accesibilidad</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border border-border bg-card p-8">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl text-primary">▣</span>
+          <div>
+            <h2 class="text-xl font-bold mb-2">Sistemas &amp; infraestructura</h2>
+            <p class="text-sm text-muted-foreground leading-relaxed mb-4">
+              Diseño y operación de infraestructura reproducible: servidores,
+              homelab, despliegues declarativos (Docker Compose, traefik,
+              túneles), observabilidad y backups 3-2-1.
+            </p>
+            <ul class="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Servidores y despliegue declarativo</li>
+              <li>Proxy, TLS y túneles (traefik, Cloudflare)</li>
+              <li>Observabilidad: métricas, logs y dashboards</li>
+              <li>Backups y continuidad</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Mars Labs icono">
+  <defs>
+    <radialGradient id="marsI" cx="36%" cy="30%" r="82%">
+      <stop offset="0%" stop-color="#FFB98A"/>
+      <stop offset="42%" stop-color="#FF7A45"/>
+      <stop offset="100%" stop-color="#D8481F"/>
+    </radialGradient>
+    <linearGradient id="stI" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0B3A4A" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#26D0F0" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0AF0FF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#06080C"/>
+  <rect x="24" y="238" width="464" height="7" fill="url(#stI)" opacity="0.9"/>
+  <rect x="24" y="272" width="464" height="4" fill="url(#stI)" opacity="0.6"/>
+  <g transform="translate(256,252)">
+    <circle r="140" fill="url(#marsI)"/>
+    <g fill="#9C2E18" opacity="0.78">
+      <circle cx="-54" cy="-50" r="24"/>
+      <circle cx="24" cy="-66" r="14"/>
+      <circle cx="50" cy="38" r="31"/>
+      <circle cx="-33" cy="64" r="19"/>
+      <circle cx="7" cy="-14" r="11"/>
+    </g>
+    <g fill="#7C2312" opacity="0.55">
+      <circle cx="-80" cy="28" r="13"/>
+      <circle cx="76" cy="-22" r="12"/>
+    </g>
+    <path d="M-124 -66 A140 140 0 0 1 66 -124" fill="none" stroke="#FFE0C8" stroke-width="7" opacity="0.55" stroke-linecap="round"/>
+  </g>
+</svg>
