@@ -15,7 +15,8 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "typecheck": "astro check",
-    "prepare": "simple-git-hooks"
+    "knip": "knip",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
@@ -29,16 +30,14 @@
   },
   "allowScripts": {
     "esbuild": true,
-    "simple-git-hooks@2.14.0": true
+    "lefthook@2.1.14": true
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@biomejs/biome": "^2.5.14",
     "@tailwindcss/typography": "^0.5.20",
-    "simple-git-hooks": "^2.14.0",
+    "knip": "^6.36.0",
+    "lefthook": "^2.1.14",
     "typescript": "^6.0.3"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "npx biome check --staged --write --no-errors-on-unmatched && git add -u"
   }
 }

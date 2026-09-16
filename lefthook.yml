@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://json.schemastore.org/lefthook.json
+#
+# Git hooks del sitio Mars Labs.
+# Instalación automática: `npm install` (script `prepare` → `lefthook install`).
+
+pre-commit:
+  parallel: false
+  commands:
+    # Formatea, lintea y ordena imports de lo que se va a commitear.
+    # stage_fixed re-añade al índice los ficheros que Biome haya arreglado.
+    biome:
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs,json,css,astro}"
+      run: npx biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  # Hook-level `files`: fuerza una lista no vacía para que los chequeos
+  # corran siempre, no solo cuando el push toca ficheros concretos.
+  files: git ls-files
+  commands:
+    # Chequeo de tipos real de Astro (.astro): bloquea el push si falla.
+    astro-check:
+      run: npx astro check
+
+    # knip: solo informa (código/deps sin usar). NO bloquea todavía
+    # (decisión actual). Cuando el repo esté limpio, quitar el `|| true`.
+    knip:
+      run: npx knip || true

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* ============================================================
    Mars Labs — design tokens (shadcn/ui style, CSS variables)

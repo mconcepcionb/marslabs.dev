@@ -36,6 +36,12 @@ jobs:
       - name: Astro typecheck
         run: npx astro check
 
+      # knip: código y dependencias sin usar. Informativo por ahora
+      # (continue-on-error) — no bloquea el pipeline todavía.
+      - name: Knip (informativo)
+        run: npx knip
+        continue-on-error: true
+
   build:
     needs: quality
     runs-on: ubuntu-latest
