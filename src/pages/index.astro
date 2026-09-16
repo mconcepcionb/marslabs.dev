@@ -248,15 +248,16 @@ const formatMetric = (m: { max: number; unit: string }) => {
   const root = document.documentElement;
   const isTouch = window.matchMedia('(hover: none)').matches;
 
-  if (root.classList.contains('motion')) {
+  // La entrada del hero es CSS (keyframes, solo compositor, sin JS). GSAP queda
+  // solo para efectos de scroll/hover y se inicializa en un momento de
+  // inactividad del navegador para no competir con el primer paint (LCP/TBT).
+  function initMotion() {
+    if (!root.classList.contains('motion')) return;
+
     const lenis = new Lenis({ duration: 1.1 });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
-
-    gsap.timeline({ defaults: { ease: 'power3.out' } })
-      .from('.hero-planet', { scale: 0.6, opacity: 0, duration: 1.4, ease: 'expo.out' })
-      .from('[data-hero-reveal]', { y: 28, opacity: 0, stagger: 0.09, duration: 0.9 }, '-=0.6');
 
     if (!isTouch) {
       const stage = document.querySelector('[data-tilt]');
@@ -364,4 +365,7 @@ const formatMetric = (m: { max: number; unit: string }) => {
 
     ScrollTrigger.refresh();
   }
+
+  if ('requestIdleCallback' in window) requestIdleCallback(initMotion, { timeout: 1000 });
+  else window.addEventListener('load', initMotion, { once: true });
 </script>
