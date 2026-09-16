@@ -12,3 +12,6 @@ screenshots/
 .opencode/
 .playwright-cli/
 skills-lock.json
+
+# Gestor de paquetes: pnpm es el canónico (ver pnpm-lock.yaml)
+package-lock.json

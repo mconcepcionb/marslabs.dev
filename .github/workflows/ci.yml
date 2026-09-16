@@ -20,12 +20,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
       # Lint + formato + orden de imports: `biome ci` falla si hay cualquier
       # diagnóstico (es el comando recomendado para CI, no auto-fixea).
