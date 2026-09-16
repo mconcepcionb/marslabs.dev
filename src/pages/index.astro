@@ -366,6 +366,9 @@ const formatMetric = (m: { max: number; unit: string }) => {
     ScrollTrigger.refresh();
   }
 
-  if ('requestIdleCallback' in window) requestIdleCallback(initMotion, { timeout: 1000 });
-  else window.addEventListener('load', initMotion, { once: true });
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(initMotion, { timeout: 1000 });
+  } else {
+    window.addEventListener('load', initMotion, { once: true });
+  }
 </script>
