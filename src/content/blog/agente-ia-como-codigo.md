@@ -56,7 +56,7 @@ El agente no publica ningún puerto en el nodo. El tráfico entra por Traefik,
 con un label por perfil:
 
 ```yaml
-- traefik.http.routers.hermes-<perfil>.rule=Host(`hermes-<perfil>.fotingo12.com`)
+- traefik.http.routers.hermes-<perfil>.rule=Host(`hermes-<perfil>.example.com`)
 - traefik.http.services.hermes-<perfil>.loadbalancer.server.port=9119
 ```
 
