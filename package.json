@@ -9,7 +9,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "astro check",
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
@@ -22,9 +28,17 @@
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "simple-git-hooks@2.14.0": true
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.20"
+    "@astrojs/check": "^0.9.10",
+    "@biomejs/biome": "^2.5.14",
+    "@tailwindcss/typography": "^0.5.20",
+    "simple-git-hooks": "^2.14.0",
+    "typescript": "^6.0.3"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx biome check --staged --write --no-errors-on-unmatched && git add -u"
   }
 }

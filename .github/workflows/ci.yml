@@ -3,6 +3,7 @@ name: Build & publish
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -11,9 +12,32 @@ permissions:
 
 env:
   IMAGE: ghcr.io/mconcepcionb/marslabs.dev
+  BIOME_VERSION: 2.5.14
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Lint + formato + orden de imports: `biome ci` falla si hay cualquier
+      # diagnóstico (es el comando recomendado para CI, no auto-fixea).
+      - name: Biome (lint + format)
+        run: npx biome ci .
+
+      # Chequeo de tipos real de Astro (es el que entiende .astro).
+      - name: Astro typecheck
+        run: npx astro check
+
   build:
+    needs: quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -8,27 +8,27 @@
    ============================================================ */
 
 :root {
-  --background: #06080C;
-  --foreground: #E8EBEE;
+  --background: #06080c;
+  --foreground: #e8ebee;
 
-  --card: #0B0E13;
-  --card-foreground: #E8EBEE;
+  --card: #0b0e13;
+  --card-foreground: #e8ebee;
 
-  --primary: #FF7A45;
-  --primary-foreground: #14100D;
+  --primary: #ff7a45;
+  --primary-foreground: #14100d;
 
-  --accent: #26D0F0;
+  --accent: #26d0f0;
   --accent-foreground: #061418;
 
-  --secondary: #3A4149;
-  --secondary-foreground: #E8EBEE;
+  --secondary: #3a4149;
+  --secondary-foreground: #e8ebee;
 
-  --muted: #14181F;
-  --muted-foreground: #6B7480;
+  --muted: #14181f;
+  --muted-foreground: #6b7480;
 
-  --border: #232B33;
-  --input: #232B33;
-  --ring: #26D0F0;
+  --border: #232b33;
+  --input: #232b33;
+  --ring: #26d0f0;
 
   --radius: 0.625rem;
 }
