@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import { buildTagSummaries } from '../../../lib/tags';
+
+const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+const tags = buildTagSummaries(posts);
+---
+<Layout title="Tags — Blog — Mars Labs" description="Todas las etiquetas del blog de Mars Labs.">
+  <section class="mx-auto max-w-5xl px-6 py-16">
+    <a href="/blog" class="text-sm text-muted-foreground transition-colors hover:text-accent">← Blog</a>
+    <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Tags</h1>
+    <p class="mt-2 mb-12 max-w-2xl text-muted-foreground">
+      Todos los temas del blog, ordenados por frecuencia de uso.
+    </p>
+
+    <div class="flex flex-wrap gap-3">
+      {
+        tags.map(({ slug, name, count }) => (
+          <a
+            href={`/blog/tags/${slug}/`}
+            class="chip chip--primary transition-colors hover:bg-primary/10"
+          >
+            #{name}
+            <span class="text-muted-foreground">({count})</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

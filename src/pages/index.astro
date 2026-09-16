@@ -1,108 +1,367 @@
 ---
+import { getCollection } from 'astro:content';
 import { CONTACT_EMAIL } from '../consts';
 import Layout from '../layouts/Layout.astro';
+import { projectMeta, STATUS_CLASS, STATUS_LABEL } from '../lib/content';
+import { slugifyTag } from '../lib/tags';
 
-const services = [
-  {
-    title: 'Aplicaciones',
-    desc: 'Apps web y herramientas a medida. De la idea al producto, con decisiones de arquitectura validadas antes de comprometerlas.',
-    icon: '◈',
-  },
-  {
-    title: 'Webs',
-    desc: 'Sites estáticos y de contenido (SSG), rápidos y sin CMS frágil. Diseño de sistema, SEO y rendimiento medido, no estimado.',
-    icon: '◎',
-  },
-  {
-    title: 'Sistemas & infra',
-    desc: 'Gestión de servidores, despliegue, homelab e infraestructura reproducible. Automatización y observabilidad.',
-    icon: '▣',
-  },
-];
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+
+const metrics = await getCollection('metrics');
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const decimalsFor = (n: number) => {
+  const s = String(n);
+  const dot = s.indexOf('.');
+  return dot === -1 ? 0 : s.length - dot - 1;
+};
+
+const formatMetric = (m: { max: number; unit: string }) => {
+  const decimals = decimalsFor(m.max);
+  const n = new Intl.NumberFormat('es-ES', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+  return `${n.format(m.max)}${m.unit ? ` ${m.unit}` : ''}`;
+};
 ---
+
 <Layout>
-  <!-- Hero -->
-  <section class="max-w-5xl mx-auto px-6 pt-24 pb-16 text-center">
-    <img
-      src="/brand/marslabs-emblem-dark@2x.png"
-      alt="Mars Labs"
-      width="128"
-      height="128"
-      class="mx-auto mb-8 h-32 w-32 rounded-2xl"
-      loading="eager"
-    />
-    <p class="text-accent font-medium tracking-[0.3em] text-xs uppercase mb-4">
-      Desarrollo · Infraestructura · Medios
-    </p>
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-balance">
-      Ingeniería que se <span class="text-primary">mide</span>, no que se promete
-    </h1>
-    <p class="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-      Mars Labs construye aplicaciones, webs y sistemas. Cada arquitectura se
-      valida con evidencia real antes de proponerla — mismo método, a cualquier
-      escala.
-    </p>
-    <div class="mt-10 flex flex-wrap justify-center gap-4">
-      <a
-        href="/contacto"
-        class="rounded-lg bg-primary text-primary-foreground font-semibold px-6 py-3 hover:opacity-90 transition-opacity"
-      >Hablemos de tu proyecto</a>
-      <a
-        href="/proyectos"
-        class="rounded-lg border border-border px-6 py-3 font-semibold hover:border-accent/60 hover:text-accent transition-colors"
-      >Ver trabajo</a>
+  <div class="progress-bar" id="progress" aria-hidden="true"></div>
+
+  <!-- ============ Hero ============ -->
+  <section class="hero relative overflow-hidden">
+    <div class="aurora" aria-hidden="true">
+      <span class="aurora__blob aurora__blob--1"></span>
+      <span class="aurora__blob aurora__blob--2"></span>
+      <span class="aurora__blob aurora__blob--3"></span>
+    </div>
+    <span class="cursor-glow" aria-hidden="true"></span>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-6 pt-16 sm:pt-20 pb-20 text-center">
+      <div data-tilt class="hero-parallax">
+        <div class="hero-planet planet-stage mx-auto -mb-8 sm:-mb-12" aria-hidden="true">
+          <div class="orbit orbit-a"><span class="orbit-dot"></span></div>
+          <div class="orbit orbit-b"><span class="orbit-dot"></span></div>
+          <div class="estela estela-1"></div>
+          <div class="estela estela-2"></div>
+          <div class="planet">
+            <div class="planet__spin"></div>
+            <div class="planet__maria"></div>
+            <div class="planet__shade"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="eyebrow mt-12" data-hero-reveal>Desarrollo · Infraestructura · Medios</p>
+      <h1 class="mt-5 text-4xl sm:text-6xl lg:text-7xl font-display font-bold tracking-tight text-balance" data-hero-reveal>
+        Ingeniería que se <span class="text-primary">mide</span>, no que se promete
+      </h1>
+      <p class="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto text-pretty" data-hero-reveal>
+        Mars Labs construye aplicaciones, webs y sistemas. Cada arquitectura se
+        valida con evidencia real antes de proponerla — mismo método, a cualquier escala.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-4" data-hero-reveal>
+        <a
+          href="/contacto"
+          data-magnetic
+          class="btn-shimmer rounded-lg bg-primary text-primary-foreground font-semibold px-7 py-3.5 hover:opacity-90 transition-opacity"
+        >Hablemos de tu proyecto</a>
+        <a
+          href="/proyectos"
+          data-magnetic
+          class="rounded-lg border border-border px-7 py-3.5 font-semibold hover:border-primary/60 hover:text-primary transition-colors"
+        >Ver trabajo</a>
+      </div>
+
+      <div class="mt-16 flex flex-col items-center text-muted-foreground" data-hero-reveal>
+        <span class="scroll-cue"></span>
+      </div>
     </div>
   </section>
 
-  <!-- Servicios -->
-  <section class="max-w-5xl mx-auto px-6 py-16">
-    <h2 class="text-2xl font-bold tracking-tight mb-8 text-center">Servicios</h2>
+  <!-- ============ Métricas ============ -->
+  <section class="border-y border-border/60 bg-card/40" data-reveal>
+    <div class="max-w-6xl mx-auto px-6 py-16 sm:py-20">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-12">
+        <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-balance">
+          Resultados <span class="text-primary">medidos</span>, no estimados
+        </h2>
+        <p class="eyebrow">Métricas de este mismo site</p>
+      </div>
+      <dl class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+        {
+          metrics.map((m) => (
+            <div class="border-l-2 border-primary/40 pl-5">
+              <dd
+                class="font-display text-4xl sm:text-5xl font-bold tracking-tight"
+                data-min={m.data.min}
+                data-max={m.data.max}
+                data-decimals={decimalsFor(m.data.max)}
+                data-suffix={m.data.unit}
+                aria-label={formatMetric(m.data)}
+              >{formatMetric(m.data)}</dd>
+              <dt class="mt-2 text-sm text-muted-foreground leading-snug">{m.data.text}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ Servicios ============ -->
+  <section class="max-w-6xl mx-auto px-6 py-20" data-reveal>
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-12">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight">Servicios</h2>
+      <p class="eyebrow">Tres líneas, un método</p>
+    </div>
     <div class="grid sm:grid-cols-3 gap-6">
       {
         services.map((s) => (
-          <article class="rounded-xl border border-border bg-card p-6 hover:border-accent/40 transition-colors">
-            <div class="text-2xl text-primary mb-4">{s.icon}</div>
-            <h3 class="font-semibold text-lg mb-2">{s.title}</h3>
-            <p class="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+          <article class="card-glow rounded-2xl border border-border bg-card p-7 hover:border-primary/40 transition-colors flex flex-col">
+            <div class="text-primary mb-5" set:html={s.data.icon}></div>
+            <h3 class="font-display font-bold text-lg mb-2">{s.data.title}</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">{s.data.summary}</p>
+            <a
+              href={`/servicios/${s.id}/`}
+              class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-soft transition-colors"
+            >Ver servicio
+              <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
           </article>
         ))
       }
     </div>
   </section>
 
-  <!-- Cómo se trabaja -->
-  <section class="max-w-5xl mx-auto px-6 py-16">
-    <h2 class="text-2xl font-bold tracking-tight mb-8 text-center">Cómo se trabaja</h2>
-    <div class="grid sm:grid-cols-2 gap-6">
-      <article class="rounded-xl border border-border bg-card p-6">
-        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">01</span> Alcance cerrado, cosa por cosa</h3>
-        <p class="text-sm text-muted-foreground leading-relaxed">Documento vivo donde cada grupo de trabajo se cierra por separado. Nada no solicitado; lo descartado, anotado.</p>
-      </article>
-      <article class="rounded-xl border border-border bg-card p-6">
-        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">02</span> Arquitectura validada con medición</h3>
-        <p class="text-sm text-muted-foreground leading-relaxed">Spikes con números reales antes de defender una decisión: tiempos de build, pesos, CLS. Las ideas sin medir no se proponen.</p>
-      </article>
-      <article class="rounded-xl border border-border bg-card p-6">
-        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">03</span> Precio transparente</h3>
-        <p class="text-sm text-muted-foreground leading-relaxed">Días-persona con rangos min–max, año prorrateado y mantenimiento aparte. Sabes qué pagas y por qué desde el día uno.</p>
-      </article>
-      <article class="rounded-xl border border-border bg-card p-6">
-        <h3 class="font-semibold mb-2 flex items-center gap-2"><span class="text-accent">04</span> Mantenimiento real</h3>
-        <p class="text-sm text-muted-foreground leading-relaxed">Lo que se entrega se mantiene: despliegues reproducibles, observabilidad y un canal directo después de la entrega.</p>
-      </article>
+  <!-- ============ Trabajo destacado ============ -->
+  <section class="border-y border-border/60 bg-card/40" data-reveal>
+    <div class="max-w-6xl mx-auto px-6 py-20">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-12">
+        <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight">Trabajo destacado</h2>
+        <a href="/proyectos" class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-soft transition-colors">Todos los proyectos
+          <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-6">
+{
+        projects.map((p) => (
+          <article class="card-glow rounded-2xl border border-border bg-card p-8 hover:border-primary/40 transition-colors">
+            <div class="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <h3 class="font-display text-xl font-bold mb-1">{p.data.title}</h3>
+                <p class="font-mono text-xs text-muted-foreground uppercase tracking-wider">{projectMeta(p)}</p>
+              </div>
+              <span class={`chip ${STATUS_CLASS[p.data.status]}`}>{STATUS_LABEL[p.data.status]}</span>
+            </div>
+            <p class="mt-4 text-sm text-muted-foreground leading-relaxed">{p.data.summary}</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              {p.data.tags.map((tag) => (
+                <span class="chip chip--primary">#{tag}</span>
+              ))}
+            </div>
+            <a
+              href={`/proyectos/${p.id}/`}
+              class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-soft transition-colors"
+            >Ver caso
+              <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </article>
+        ))
+      }
+      </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="max-w-5xl mx-auto px-6 py-16 text-center">
-    <div class="rounded-2xl border border-border bg-card p-10">
-      <h2 class="text-2xl font-bold tracking-tight mb-3">¿Tienes un proyecto en mente?</h2>
-      <p class="text-muted-foreground mb-6 max-w-xl mx-auto">
+  <!-- ============ Blog reciente ============ -->
+  <section class="max-w-6xl mx-auto px-6 py-20" data-reveal>
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-12">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight">Blog</h2>
+      <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-soft transition-colors">Leer el blog
+        <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-6">
+      {
+        posts.map((post) => (
+          <div class="card-glow relative flex flex-col rounded-2xl border border-border bg-card p-7 transition-colors hover:border-primary/40 group">
+            <div class="mb-4 flex flex-wrap items-center gap-3 font-mono text-xs text-muted-foreground">
+              <time datetime={post.data.date.toISOString()}>
+                {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'short' })}
+              </time>
+              {
+                post.data.tags.slice(0, 2).map((tag) => (
+                  <a
+                    href={`/blog/tags/${slugifyTag(tag)}/`}
+                    class="relative z-10 transition-colors hover:text-accent"
+                  >#{tag}</a>
+                ))
+              }
+            </div>
+            <a href={`/blog/${post.id}/`} class="after:absolute after:inset-0">
+              <h3 class="font-display font-bold text-lg leading-snug transition-colors group-hover:text-primary">{post.data.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-muted-foreground line-clamp-3">{post.data.summary}</p>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ============ CTA final ============ -->
+  <section class="max-w-6xl mx-auto px-6 py-20 text-center" data-reveal>
+    <div class="card-glow rounded-3xl border border-border bg-card px-8 py-16 sm:py-20">
+      <p class="eyebrow">Hablemos</p>
+      <h2 class="mt-4 font-display text-3xl sm:text-5xl font-bold tracking-tight text-balance max-w-2xl mx-auto">
+        ¿Tienes un proyecto en mente?
+      </h2>
+      <p class="mt-5 text-muted-foreground max-w-xl mx-auto text-pretty">
         Escríbeme y lo desglosamos cosa por cosa, con una propuesta medible antes de comprometer nada.
       </p>
-      <a href={`mailto:${CONTACT_EMAIL}`} class="rounded-lg bg-accent text-accent-foreground font-semibold px-6 py-3 hover:opacity-90 transition-opacity">
-        {CONTACT_EMAIL}
-      </a>
+      <div class="mt-9 flex flex-wrap justify-center gap-4">
+        <a href={`mailto:${CONTACT_EMAIL}`} data-magnetic class="btn-shimmer rounded-lg bg-primary text-primary-foreground font-semibold px-7 py-3.5 hover:opacity-90 transition-opacity">
+          {CONTACT_EMAIL}
+        </a>
+        <a href="/contacto" data-magnetic class="rounded-lg border border-border px-7 py-3.5 font-semibold hover:border-primary/60 hover:text-primary transition-colors">
+          Página de contacto
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import Lenis from 'lenis';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const root = document.documentElement;
+  const isTouch = window.matchMedia('(hover: none)').matches;
+
+  if (root.classList.contains('motion')) {
+    const lenis = new Lenis({ duration: 1.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    gsap.timeline({ defaults: { ease: 'power3.out' } })
+      .from('.hero-planet', { scale: 0.6, opacity: 0, duration: 1.4, ease: 'expo.out' })
+      .from('[data-hero-reveal]', { y: 28, opacity: 0, stagger: 0.09, duration: 0.9 }, '-=0.6');
+
+    if (!isTouch) {
+      const stage = document.querySelector('[data-tilt]');
+      if (stage) {
+        const xTo = gsap.quickTo(stage, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+        const yTo = gsap.quickTo(stage, 'rotationX', { duration: 0.6, ease: 'power3.out' });
+        window.addEventListener('mousemove', (e) => {
+          const nx = (e.clientX / window.innerWidth) * 2 - 1;
+          const ny = (e.clientY / window.innerHeight) * 2 - 1;
+          xTo(nx * 8);
+          yTo(-ny * 8);
+        });
+      }
+
+      const hero = document.querySelector<HTMLElement>('.hero');
+      const glow = document.querySelector<HTMLElement>('.cursor-glow');
+      if (hero && glow) {
+        const gx = gsap.quickTo(glow, 'x', { duration: 0.5, ease: 'power3.out' });
+        const gy = gsap.quickTo(glow, 'y', { duration: 0.5, ease: 'power3.out' });
+        hero.addEventListener('mousemove', (e) => {
+          const r = hero.getBoundingClientRect();
+          glow.classList.add('is-active');
+          gx(e.clientX - r.left);
+          gy(e.clientY - r.top);
+        });
+        hero.addEventListener('mouseleave', () => glow.classList.remove('is-active'));
+      }
+
+      document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((btn) => {
+        const mx = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' });
+        const my = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' });
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          mx((e.clientX - (r.left + r.width / 2)) * 0.25);
+          my((e.clientY - (r.top + r.height / 2)) * 0.35);
+        });
+        btn.addEventListener('mouseleave', () => {
+          mx(0);
+          my(0);
+        });
+      });
+    }
+
+    gsap.to('.hero-parallax', {
+      yPercent: 8,
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+    });
+
+    gsap.to('.aurora', {
+      yPercent: 14,
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+    });
+
+    gsap.to('#progress', {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: {
+        start: 0,
+        end: () => ScrollTrigger.maxScroll(window),
+        scrub: 0.3,
+      },
+    });
+
+    gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+      const targets = el.querySelectorAll<HTMLElement>(':scope > *');
+      gsap.from(targets.length ? targets : el, {
+        y: 44,
+        opacity: 0,
+        scale: 0.985,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.1,
+        scrollTrigger: { trigger: el, start: 'top 80%' },
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-max]').forEach((el) => {
+      const from = parseFloat(el.dataset.min ?? '0');
+      const to = parseFloat(el.dataset.max ?? '0');
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const suffix = el.dataset.suffix || '';
+      const fmt = new Intl.NumberFormat('es-ES', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => {
+          const proxy = { value: from };
+          gsap.to(proxy, {
+            value: to,
+            duration: 1.8,
+            ease: 'power3.out',
+            onUpdate: () => {
+              el.textContent = fmt.format(proxy.value) + (suffix ? ` ${suffix}` : '');
+            },
+          });
+        },
+      });
+    });
+
+    ScrollTrigger.refresh();
+  }
+</script>

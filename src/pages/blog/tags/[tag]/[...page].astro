@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+import Pagination from '../../../../components/Pagination.astro';
+import PostCard from '../../../../components/PostCard.astro';
+import Layout from '../../../../layouts/Layout.astro';
+import { buildTagSummaries, slugifyTag } from '../../../../lib/tags';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+  tag: string;
+  tagName: string;
+}
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+  const summaries = buildTagSummaries(posts);
+
+  return summaries.flatMap(({ slug, name }) =>
+    paginate(
+      posts.filter((p) => p.data.tags.some((t) => slugifyTag(t) === slug)),
+      {
+        pageSize: 6,
+        params: { tag: slug },
+        props: { tag: slug, tagName: name },
+      },
+    ),
+  );
+};
+
+const { page, tag, tagName } = Astro.props;
+const base = `/blog/tags/${tag}`;
+const countLabel = page.total === 1 ? '1 post' : `${page.total} posts`;
+---
+<Layout
+  title={`#${tagName} — Blog — Mars Labs`}
+  description={`Todos los posts del blog etiquetados con #${tagName}.`}
+>
+  <section class="mx-auto max-w-5xl px-6 py-16">
+    <header class="mb-12">
+      <a href="/blog/tags/" class="text-sm text-muted-foreground transition-colors hover:text-accent">← Todos los tags</a>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Tag: <span class="text-primary">#{tagName}</span></h1>
+      <p class="mt-2 text-muted-foreground">{countLabel}</p>
+    </header>
+
+    <div class="space-y-8">
+      {page.data.map((post) => <PostCard post={post} />)}
+    </div>
+
+    {page.lastPage > 1 && <Pagination page={page} base={base} />}
+  </section>
+</Layout>

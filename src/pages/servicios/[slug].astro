@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((service) => ({
+    params: { slug: service.id },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const { Content } = await render(service);
+---
+<Layout title={`${service.data.title} — Servicios — Mars Labs`} description={service.data.summary}>
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <header class="mb-10">
+      <div class="flex items-center gap-3 text-sm text-muted-foreground mb-6">
+        <a href="/servicios" class="hover:text-accent transition-colors">← Servicios</a>
+      </div>
+      <div class="text-primary mb-4" set:html={service.data.icon} />
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-balance">{service.data.title}</h1>
+      <p class="mt-4 text-lg text-muted-foreground text-pretty">{service.data.summary}</p>
+    </header>
+
+    <div class="prose prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-accent prose-strong:text-foreground prose-li:text-muted-foreground prose-code:text-accent">
+      <Content />
+    </div>
+  </article>
+</Layout>

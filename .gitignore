@@ -5,3 +5,10 @@ dist/
 .env
 .DS_Store
 core.*
+screenshots/
+
+# Tooling local de agentes (skills instalados y snapshots de capturas)
+.agents/
+.opencode/
+.playwright-cli/
+skills-lock.json
