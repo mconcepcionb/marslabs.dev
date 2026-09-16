@@ -1,51 +1,43 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import { projectMeta, STATUS_CLASS, STATUS_LABEL } from '../lib/content';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 ---
 <Layout title="Proyectos — Mars Labs">
   <section class="max-w-5xl mx-auto px-6 py-16">
-    <div class="tech-tag mb-3" aria-hidden="true">// REGISTRO_DE_MISIONES</div>
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Proyectos</h1>
     <p class="text-muted-foreground max-w-2xl mb-12">
       Trabajo con alcance real: qué se pidió, qué se midió, qué se entregó.
     </p>
 
     <div class="space-y-8">
-      <article class="rounded-2xl border border-border bg-card p-8">
-        <div class="flex items-start justify-between gap-4 flex-wrap">
-          <div class="flex items-start gap-4">
-            <span class="mission-badge mt-1">MARS-07</span>
-            <div>
-              <h2 class="text-xl font-bold mb-1">ElTime.es — renovación</h2>
-              <p class="text-xs text-muted-foreground uppercase tracking-wider mb-3">Web editorial · SSG · 2026</p>
+      {
+        projects.map((project) => (
+          <article class="rounded-2xl border border-border bg-card p-8 hover:border-accent/40 transition-colors">
+            <div class="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <h2 class="text-xl font-bold mb-1">{project.data.title}</h2>
+                <p class="text-xs text-muted-foreground uppercase tracking-wider mb-3">{projectMeta(project)}</p>
+              </div>
+              <span class={`chip ${STATUS_CLASS[project.data.status]}`}>{STATUS_LABEL[project.data.status]}</span>
             </div>
-          </div>
-          <span class="rounded-full border border-accent/40 text-accent text-xs font-medium px-3 py-1">En curso</span>
-        </div>
-        <p class="text-sm text-muted-foreground leading-relaxed">
-          Migración de un periódico digital a arquitectura de backoffice headless
-          + front estático. Validado con spike: 60.000 páginas en 39 s de build,
-          ~4 KB por página, CLS 0,017 con publicidad pre-reservada. Publicación
-          incremental y despliegue reproducible.
-        </p>
-      </article>
-
-      <article class="rounded-2xl border border-border bg-card p-8">
-        <div class="flex items-start justify-between gap-4 flex-wrap">
-          <div class="flex items-start gap-4">
-            <span class="mission-badge mt-1">MARS-02</span>
-            <div>
-              <h2 class="text-xl font-bold mb-1">Homelab Fotingo12</h2>
-              <p class="text-xs text-muted-foreground uppercase tracking-wider mb-3">Infraestructura · declarativo · en marcha</p>
+            <p class="text-sm text-muted-foreground leading-relaxed">{project.data.summary}</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              {project.data.tags.map((tag) => (
+                <span class="chip chip--primary">#{tag}</span>
+              ))}
             </div>
-          </div>
-          <span class="rounded-full border border-border text-muted-foreground text-xs font-medium px-3 py-1">Personal</span>
-        </div>
-        <p class="text-sm text-muted-foreground leading-relaxed">
-          Infraestructura homelab reproducibile por Docker Compose + SOPS:
-          edge (traefik, pihole, cloudflared), SSO, observabilidad central
-          (Prometheus + Loki + Grafana) y una docena de aplicaciones en dos nodos.
-        </p>
-      </article>
+            <a
+              href={`/proyectos/${project.id}/`}
+              class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:opacity-80 transition-opacity"
+            >Ver caso
+              <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+          </article>
+        ))
+      }
     </div>
   </section>
 </Layout>

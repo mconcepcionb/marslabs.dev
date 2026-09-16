@@ -1,6 +1,6 @@
 ---
 min: 0
-max: 9.8
+max: 10.7
 unit: "KB"
 text: "HTML por página, media real"
 ---
