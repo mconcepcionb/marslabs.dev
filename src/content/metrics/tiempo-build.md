@@ -1,6 +1,6 @@
 ---
 min: 0
-max: 1.18
+max: 2.07
 unit: "s"
 text: "segundos de build"
 ---

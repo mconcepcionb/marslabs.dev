@@ -13,8 +13,8 @@ por imagen y medido con datos reales antes de afirmar nada.
 
 ## Qué se midió
 
-- **16 páginas** generadas en **1,18 s** de build.
-- **~10,7 KB de HTML por página** servida (media).
+- **29 páginas** generadas en **2,07 s** de build.
+- **~9,8 KB de HTML por página** servida (media).
 - **CLS de 0,000** en carga real, medido con PerformanceObserver.
 
 Los números se pueden verificar en esta misma página, con las herramientas del
