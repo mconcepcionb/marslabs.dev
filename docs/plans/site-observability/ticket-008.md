@@ -3,7 +3,7 @@ id: ticket-008
 plan: site-observability
 repo: homelab
 phase: 3
-status: planned
+status: done
 depends_on: [ticket-006, ticket-007]
 ---
 
@@ -87,3 +87,22 @@ names used, with one raw log line and one raw metric line, in the Result.
   panels read-only and the JSON self-contained.
 - **Rollback**: `git revert <commit>` removes `marslabs.json`; Grafana
   de-provisions it on the next reload.
+
+## Result
+
+- Homelab commit `2c2df76` (`grafana: dashboard de Mars Labs (edge, origen,
+  tunel)`): `nodes/server/observability/grafana/config/dashboards/marslabs.json`,
+  uid `marslabs-health`, provisioned by the existing `Homelab` file provider.
+- Ten panels: edge cache ratio / requests / bandwidth (Cloudflare exporter),
+  origin requests-by-status, latency p50/p95, 4xx/5xx rate (Traefik), tunnel
+  requests/s and HA connections (cloudflared), and two Loki tables (top paths and
+  status codes).
+- Labels/fields discovered and used instead of guessed: Traefik service
+  `marslabs-svc@docker`; Loki container `server-traefik-1` and JSON fields
+  `ServiceName`, `RequestPath`, `DownstreamStatus`.
+- Verification (2026-09-25): JSON valid; all six PromQL expressions return data;
+  both LogQL expressions return `resultType: vector`; the file is visible in the
+  container (`/var/lib/grafana/dashboards/marslabs.json`); Grafana's search API
+  returns `{"uid":"marslabs-health","title":"Mars Labs","url":"/d/marslabs-health/mars-labs"}`.
+- The label `zone` maps the Cloudflare zone ID; a value mapping to `marslabs.dev`
+  is left to the operator (or a later ticket).

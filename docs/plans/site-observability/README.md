@@ -109,7 +109,7 @@ drop the cross-repo note.
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | done    |
 | ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | done    |
 | ticket-007 | Add the Cloudflare zone analytics exporter              | homelab     | 3    | F7       | -                        | done    |
-| ticket-008 | Provision the Mars Labs dashboard                       | homelab     | 3    | F4, F5   | ticket-006, ticket-007   | planned |
+| ticket-008 | Provision the Mars Labs dashboard                       | homelab     | 3    | F4, F5   | ticket-006, ticket-007   | done    |
 | ticket-009 | Alert on Mars Labs health                               | homelab     | 3    | F4       | ticket-008               | planned |
 | ticket-010 | Gate the build on a performance budget                  | marslabs.dev | 4    | F1       | ticket-001               | planned |
 | ticket-011 | Retire the manual CSV exports and document the pipeline | marslabs.dev | 4    | F7       | ticket-003, ticket-008   | planned |
