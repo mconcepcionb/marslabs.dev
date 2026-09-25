@@ -3,7 +3,7 @@ id: ticket-002
 plan: site-observability
 repo: marslabs.dev
 phase: 1
-status: planned
+status: done
 depends_on: []
 ---
 
@@ -71,3 +71,21 @@ pnpm lint && pnpm typecheck
   URLs, so the verification reads the value back from `dist/`.
 - **Rollback**: `git revert <commit>` removes the integration, `public/robots.txt`
   and the canonical tag; the build returns to its current output.
+
+## Result
+
+- `astro.config.mjs`: set `site: 'https://marslabs.dev'` and added
+  `@astrojs/sitemap` (`3.7.4`) to the integrations.
+- `public/robots.txt`: `Allow: /` plus `Sitemap: https://marslabs.dev/sitemap-index.xml`.
+- `src/layouts/Layout.astro`: canonical link derived from
+  `Astro.url.pathname` + `Astro.site`.
+- Verification: `pnpm lint`, `pnpm typecheck` and `pnpm build` green; build
+  reported 29 pages. `dist/sitemap-index.xml` references `dist/sitemap-0.xml`,
+  `sitemap-0.xml` has 29 `<loc>` entries (one per page), `dist/robots.txt`
+  present, and `dist/index.html` has exactly one canonical —
+  `https://marslabs.dev/`.
+- Note: the build also rewrote the auto-generated metrics under
+  `src/content/metrics/` and `src/content/projects/marslabs-dev.md` (the
+  committed values were stale: 16 → 29 pages). Those files are unrelated to this
+  ticket and were reverted, so the commit stays atomic; the drift should get its
+  own commit.

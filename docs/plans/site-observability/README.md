@@ -85,7 +85,7 @@ drop the cross-repo note.
 | Id         | Title                                                   | Repo        | Phase | Finding  | Depends on               | Status  |
 | ---------- | ------------------------------------------------------- | ----------- | ----- | -------- | ------------------------ | ------- |
 | ticket-001 | Add field analytics and RUM to the site                 | marslabs.dev | 1    | F1, F2   | -                        | planned |
-| ticket-002 | Add sitemap, robots and canonical URLs                  | marslabs.dev | 1    | F8       | -                        | planned |
+| ticket-002 | Add sitemap, robots and canonical URLs                  | marslabs.dev | 1    | F8       | -                        | done    |
 | ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-002               | planned |
 | ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | -                        | planned |
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | planned |
