@@ -44,6 +44,19 @@ jobs:
         run: npx knip
         continue-on-error: true
 
+      # Presupuesto de rendimiento: build del SSG + medición real (FCP/CLS) en
+      # Chromium. Falla el pipeline si hay regresión.
+      - name: Build (dist)
+        run: pnpm build
+        env:
+          SKIP_CLS: "1"
+
+      - name: Install Chromium (Playwright)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Performance budget
+        run: pnpm run perf
+
   build:
     needs: quality
     runs-on: ubuntu-latest

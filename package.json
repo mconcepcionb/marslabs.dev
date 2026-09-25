@@ -11,6 +11,7 @@
     "build": "node scripts/update-stats.mjs",
     "build:raw": "astro build",
     "preview": "astro preview",
+    "perf": "node scripts/perf-budget.mjs",
     "capture": "node scripts/capture.mjs",
     "astro": "astro",
     "check": "astro check",
@@ -47,6 +48,7 @@
     "@tailwindcss/typography": "^0.5.20",
     "knip": "^6.36.0",
     "lefthook": "^2.1.14",
+    "playwright": "^1.63.0",
     "playwright-core": "^1.63.0",
     "typescript": "^6.0.3"
   }

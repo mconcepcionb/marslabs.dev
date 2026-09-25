@@ -3,7 +3,7 @@ id: ticket-010
 plan: site-observability
 repo: marslabs.dev
 phase: 4
-status: planned
+status: done
 depends_on: [ticket-001]
 ---
 
@@ -85,3 +85,22 @@ Record the measured LCP/CLS values and the chosen budgets in the Result.
   `SKIP_PERF=1` is the documented escape hatch.
 - **Rollback**: `git revert <commit>` removes the script, the script entry and
   the CI step; builds return to their current behaviour.
+
+## Result
+
+- `scripts/perf-budget.mjs`: serves `dist/`, measures the home and one blog post
+  over 3 runs (median), and exits 1 on breach. `SKIP_PERF=1` skips.
+- Deviation from the draft: the budget is on **FCP** (1800 ms) + CLS (0.05), not
+  LCP. The Playwright headless Chromium exposes `first-contentful-paint` but no
+  `largest-contentful-paint` entries (verified: `paint` present, `lcp` length 0),
+  so an LCP budget could never be satisfied; LCP is still reported when present.
+- Browser resolution: `PLAYWRIGHT_CHROMIUM_EXECUTABLE` → `playwright` package
+  (added `playwright@1.63.0` devDependency; CI installs it) → the local
+  `chromium-1228` path used by `update-stats.mjs`.
+- `package.json`: `perf` script. `.github/workflows/ci.yml`: build (`SKIP_CLS=1`)
+  + `playwright install --with-deps chromium` + `pnpm run perf` in the quality
+  job.
+- Verification (2026-09-25): `pnpm run perf` green
+  (`/` FCP 56 ms · CLS 0.0000; `/blog/site-que-se-mide/` FCP 52 ms · CLS 0.0000);
+  lowering the FCP budget to 1 ms produced `FAIL` and exit 1; `SKIP_PERF=1`
+  short-circuits; `pnpm lint` and `pnpm typecheck` are clean.
