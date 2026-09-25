@@ -103,7 +103,7 @@ drop the cross-repo note.
 | ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-001, ticket-002   | planned |
 | ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | ticket-013               | done    |
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | done    |
-| ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | planned |
+| ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | done    |
 | ticket-007 | Add the Cloudflare zone analytics exporter              | homelab     | 3    | F7       | -                        | planned |
 | ticket-008 | Provision the Mars Labs dashboard                       | homelab     | 3    | F4, F5   | ticket-006, ticket-007   | planned |
 | ticket-009 | Alert on Mars Labs health                               | homelab     | 3    | F4       | ticket-008               | planned |

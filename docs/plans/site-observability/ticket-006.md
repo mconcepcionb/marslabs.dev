@@ -3,7 +3,7 @@ id: ticket-006
 plan: site-observability
 repo: homelab
 phase: 3
-status: planned
+status: done
 depends_on: []
 ---
 
@@ -82,3 +82,20 @@ curl -sI https://marslabs.dev/ | head -1
   after.
 - **Rollback**: `git revert <commit>` and recreate the tunnel container; the
   Prometheus job becomes an empty target and is harmless.
+
+## Result
+
+- Homelab commit `9744ae7` (`cloudflared: exponer metricas Prometheus y
+  scrapearlas`): added `--metrics 0.0.0.0:20241` in
+  `stacks/infra/cloudflared/compose.yaml`, published `20241:20241` in
+  `nodes/server/infra/cloudflared.override.yaml`, added the `cloudflared`
+  Prometheus job, and documented the endpoint in `nodes/server/infra/README.md`.
+- Discovery during deploy: the live tunnel is `server-cloudflared-1` (project
+  `server`, from the repo). An old `cloudflared` container from a legacy
+  `/home/mars/stacks/tunnel/compose.yml` is stopped — inspecting it by name first
+  was misleading. The homelab-managed tunnel is the one that serves traffic.
+- Verification (2026-09-25): `curl http://192.168.1.20:20241/metrics` returns
+  `cloudflared_*` series; Prometheus target `job=cloudflared` is `health: up`;
+  `https://marslabs.dev/` still returns `200`. Prometheus had to be recreated
+  (`up -d --force-recreate prometheus`) because `git pull` replaced the bind-
+  mounted `prometheus.yml` with a new inode and `/-/reload` read the stale file.
