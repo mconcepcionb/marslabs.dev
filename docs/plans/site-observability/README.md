@@ -73,6 +73,10 @@ drop the cross-repo note.
 
 ## Amendments
 
+- **2026-09-25 — ticket-013 added.** While verifying ticket-004, `pnpm build`
+  failed: `scripts/update-stats.mjs` only parses build times in seconds, and
+  Astro prints `949ms` once a build drops under one second. This blocks the gate,
+  so ticket-013 fixes the parser and ticket-004 depends on it.
 - **2026-09-25 — ticket-001 mechanism.** The draft added a committed Cloudflare
   Web Analytics beacon (`src/consts.ts` + `src/layouts/Layout.astro`). The
   operator chose Cloudflare **automatic setup** instead, so the ticket now
@@ -86,7 +90,7 @@ drop the cross-repo note.
 | Phase | Name                            | Tickets    | Release tag |
 | ----- | ------------------------------- | ---------- | ----------- |
 | 1     | Field measurement               | 001 .. 003 | v0.1.0      |
-| 2     | Edge efficiency and deploy      | 004 .. 005 | v0.2.0      |
+| 2     | Edge efficiency and deploy      | 004, 005, 013 | v0.2.0   |
 | 3     | Central observability (homelab) | 006 .. 009 | v0.3.0      |
 | 4     | Regression guard and close      | 010 .. 012 | v0.4.0      |
 
@@ -97,7 +101,7 @@ drop the cross-repo note.
 | ticket-001 | Add field analytics and RUM to the site                 | marslabs.dev | 1    | F1, F2   | -                        | done    |
 | ticket-002 | Add sitemap, robots and canonical URLs                  | marslabs.dev | 1    | F8       | -                        | done    |
 | ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-001, ticket-002   | planned |
-| ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | -                        | planned |
+| ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | ticket-013               | planned |
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | planned |
 | ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | planned |
 | ticket-007 | Add the Cloudflare zone analytics exporter              | homelab     | 3    | F7       | -                        | planned |
@@ -106,6 +110,7 @@ drop the cross-repo note.
 | ticket-010 | Gate the build on a performance budget                  | marslabs.dev | 4    | F1       | ticket-001               | planned |
 | ticket-011 | Retire the manual CSV exports and document the pipeline | marslabs.dev | 4    | F7       | ticket-003, ticket-008   | planned |
 | ticket-012 | Close the plan                                          | marslabs.dev | 4    | -        | ticket-011               | planned |
+| ticket-013 | Parse sub-second build times in the stats script        | marslabs.dev | 2    | -        | -                        | planned |
 
 ## Risk
 

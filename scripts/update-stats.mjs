@@ -150,13 +150,16 @@ async function main() {
   }
 
   const clean = output.replace(/\u001b\[[0-9;]*m/g, '');
-  const parsed = clean.match(/(\d+) page\(s\) built in ([\d.]+)s/);
+  // Astro imprime segundos cuando el build tarda >= 1 s y milisegundos cuando
+  // baja de ahí ("29 page(s) built in 949ms"); ambos deben normalizarse a s.
+  const parsed = clean.match(/(\d+) page\(s\) built in ([\d.]+)(ms|s)/);
   if (!parsed) {
     console.error('[stats] no se pudo parsear el resultado del build:\n' + clean);
     process.exit(1);
   }
   const pages = Number(parsed[1]);
-  const buildTime = Number(Number(parsed[2]).toFixed(2));
+  const seconds = parsed[3] === 'ms' ? Number(parsed[2]) / 1000 : Number(parsed[2]);
+  const buildTime = Number(seconds.toFixed(2));
 
   const htmls = walkHtml(dist);
   const total = htmls.reduce((sum, f) => sum + statSync(f).size, 0);
