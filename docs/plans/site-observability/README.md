@@ -71,6 +71,16 @@ and verification are unchanged. If strict single-repo planning is later
 preferred, mirror this plan under `homelab/docs/plans/site-observability/` and
 drop the cross-repo note.
 
+## Amendments
+
+- **2026-09-25 — ticket-001 mechanism.** The draft added a committed Cloudflare
+  Web Analytics beacon (`src/consts.ts` + `src/layouts/Layout.astro`). The
+  operator chose Cloudflare **automatic setup** instead, so the ticket now
+  enables and documents the dashboard-managed beacon rather than adding code; it
+  creates `docs/runbooks/site-analytics.md`, which is why ticket-003 now depends
+  on it. Additive and reversible: a later ticket can move back to a committed
+  beacon if version control is wanted.
+
 ## Phases
 
 | Phase | Name                            | Tickets    | Release tag |
@@ -84,9 +94,9 @@ drop the cross-repo note.
 
 | Id         | Title                                                   | Repo        | Phase | Finding  | Depends on               | Status  |
 | ---------- | ------------------------------------------------------- | ----------- | ----- | -------- | ------------------------ | ------- |
-| ticket-001 | Add field analytics and RUM to the site                 | marslabs.dev | 1    | F1, F2   | -                        | planned |
+| ticket-001 | Add field analytics and RUM to the site                 | marslabs.dev | 1    | F1, F2   | -                        | done    |
 | ticket-002 | Add sitemap, robots and canonical URLs                  | marslabs.dev | 1    | F8       | -                        | done    |
-| ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-002               | planned |
+| ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-001, ticket-002   | planned |
 | ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | -                        | planned |
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | planned |
 | ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | planned |
@@ -115,8 +125,8 @@ secrets directory. Both must be green before a phase closes.
 
 When the plan is done:
 
-- The site ships a Cloudflare Web Analytics beacon and a canonical sitemap;
-  Search Console shows the query/impression/CTR/position baseline.
+- The site has Cloudflare Web Analytics enabled (automatic setup) and a canonical
+  sitemap; Search Console shows the query/impression/CTR/position baseline.
 - Cloudflare caches HTML and static assets with an evidence-backed rule, the
   cache ratio is materially higher, and every deploy purges the edge.
 - Grafana (homelab) has a **Mars Labs** dashboard with edge traffic and cache

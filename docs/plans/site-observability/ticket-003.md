@@ -4,7 +4,7 @@ plan: site-observability
 repo: marslabs.dev
 phase: 1
 status: planned
-depends_on: [ticket-002]
+depends_on: [ticket-001, ticket-002]
 ---
 
 # Verify Search Console and record the SEO baseline
