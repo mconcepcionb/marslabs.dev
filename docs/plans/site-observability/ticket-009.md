@@ -3,7 +3,7 @@ id: ticket-009
 plan: site-observability
 repo: homelab
 phase: 3
-status: planned
+status: done
 depends_on: [ticket-008]
 ---
 
@@ -76,3 +76,26 @@ returns the expected series in Grafana's alert preview.
   A malformed rules file is skipped by provisioning and breaks nothing else.
 - **Rollback**: `git revert <commit>` removes the rules; Grafana de-provisions
   them on the next reload.
+
+## Result
+
+- Homelab commits: `beb4a45` (`grafana: reglas de alerta de Mars Labs`),
+  `9053999` (cache-ratio threshold to 15 %/24 h), `3a899f4` (5xx NoData = OK).
+  File: `nodes/server/observability/grafana/config/provisioning/alerting/marslabs.yaml`
+  (apiVersion 1, group `marslabs`, folder `Homelab Alerts`), modelled on Grafana's
+  own export of the existing `homelab-core` rules.
+- Four rules: *origen caido* (`time() - max(container_last_seen{name="marslabs"}) > 180`),
+  *5xx alto* (`sum(rate(...{code=~"5.."}[5m])) > 0.05`), *tunel caido*
+  (`sum(cloudflared_tunnel_ha_connections) < 1`) and *cache ratio bajo*
+  (`cloudflare_zone_cache_ratio_window < 0.15` for 24 h).
+- Thresholds tuned against real values: cache ratio is ~21 %, so the draft's
+  0.5/6 h would have fired wrongly; it is now a 15 %/24 h regression guard.
+  The 5xx rule uses `noDataState: OK` (no 5xx = healthy).
+- Verification (2026-09-25): all four rules are provisioned with
+  `provenance: file` and evaluate normally — group `marslabs` states all
+  `inactive`, instances `Normal`/`Normal (NoData)`.
+- Deviation: the synthetic firing drills (stop `marslabs` for >5 min, or kill
+  the tunnel for >5 min) were not run — stopping the public tunnel is
+  disruptive and the cache rule needs 24 h. Steps are documented for an
+  operator drill; the rule conditions were verified against live metric values
+  instead.
