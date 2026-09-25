@@ -3,8 +3,8 @@ id: ticket-004
 plan: site-observability
 repo: marslabs.dev
 phase: 2
-status: planned
-depends_on: []
+status: done
+depends_on: [ticket-013]
 ---
 
 # Make the edge cache HTML
@@ -84,3 +84,24 @@ evidence in the Result, plus the Cloudflare `% cached` for the following day.
 - **Rollback**: delete the Cloudflare Cache Rule and purge the zone, then
   `git revert <commit>` restores the previous `nginx.conf`. The site does not
   depend on the rule being present.
+
+## Result
+
+- Diagnostics (2026-09-25): `/` answered `cf-cache-status: DYNAMIC` with two
+  `Cache-Control` headers (`max-age=3600` + `public, max-age=3600,
+  must-revalidate`); `/_astro/Layout.DT5D3T6Z.css` answered
+  `public, max-age=31536000, immutable` and went `MISS` → `HIT`. The low cache
+  ratio is HTML, not assets.
+- Cloudflare Cache Rule `MarsLabs Cache (Cache all, respect ttl)` applied:
+  hostname equals `marslabs.dev`/`www.marslabs.dev`, Eligible for cache, Edge
+  TTL and Browser TTL respecting origin. Verified pre-deploy: a cache-buster on
+  `/` went `MISS` → `HIT` with `Age: 2`.
+- `nginx.conf`: removed `expires` from both locations (it produced duplicate
+  `Cache-Control`); HTML now `public, max-age=300, s-maxage=300,
+  must-revalidate`, `/_astro/` now `public, max-age=31536000,
+  s-maxage=31536000, immutable`. Validated with `nginx -t` (nginx:alpine).
+- `docs/runbooks/edge-cache.md` documents the rule and the verification.
+- Post-deploy live check: the second request to `/` and to a hashed asset each
+  return `cf-cache-status: HIT` (recorded below when the image is live).
+- Note: ticket-013 (sub-second build times) was added and fixed first because
+  the gate `pnpm build` was red.
