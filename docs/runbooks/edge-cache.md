@@ -60,6 +60,24 @@ curl -sI https://marslabs.dev/_astro/<hashed-asset> | grep -i 'cf-cache-status'
 Expected: a single `Cache-Control` per response; HTML `HIT` after the rule is
 applied and the new image is deployed.
 
+## Purge on deploy
+
+`.github/workflows/ci.yml` has a **Purge Cloudflare cache** step that runs on
+`main` after the image is pushed and calls
+`POST /zones/{zone}/purge_cache` with `{"purge_everything":true}`.
+
+Configuration (repository level):
+
+- **Secret** `CLOUDFLARE_API_TOKEN` — Cloudflare → My Profile → API Tokens →
+  Create Token → Custom, permission **Zone → Cache Purge → Purge**, scoped to
+  `marslabs.dev` only.
+- **Variable** `CLOUDFLARE_ZONE_ID` — Cloudflare → `marslabs.dev` → Overview →
+  right sidebar → **Zone ID**.
+
+If either is missing the step logs a notice and is skipped, so the pipeline
+stays green until the credentials exist. Because the edge TTL is 300 s, even a
+skipped purge bounds staleness after a deploy to five minutes.
+
 ## Rollback
 
 Delete the Cache Rule in Cloudflare and purge the zone, then `git revert` the

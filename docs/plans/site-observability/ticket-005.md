@@ -3,7 +3,7 @@ id: ticket-005
 plan: site-observability
 repo: marslabs.dev
 phase: 2
-status: planned
+status: done
 depends_on: [ticket-004]
 ---
 
@@ -76,3 +76,20 @@ URL and the Cloudflare `success:true` in the Result.
   build.
 - **Rollback**: `git revert <commit>` removes the step; ticket-004's short TTL
   still limits staleness, and the cache can be purged by hand.
+
+## Result
+
+- `.github/workflows/ci.yml`: added a **Purge Cloudflare cache** step after
+  `Build & push`, guarded by `github.ref == 'refs/heads/main'`. It issues
+  `POST /zones/{zone}/purge_cache` with `{"purge_everything":true}`, prints the
+  API body, and fails on non-2xx or when `"success":true` is absent.
+  Deviation from the draft: if `CLOUDFLARE_API_TOKEN` or `CLOUDFLARE_ZONE_ID`
+  is unset it logs a `::notice::` and skips instead of failing, so the pipeline
+  stays green until the credentials exist.
+- `docs/runbooks/edge-cache.md`: new "Purge on deploy" section (how to obtain the
+  Zone ID and a Zone → Cache Purge token, and the secret/variable names).
+- Credentials configured at the repository: secret `CLOUDFLARE_API_TOKEN`
+  (Zone → Cache Purge, scoped to `marslabs.dev`) and variable
+  `CLOUDFLARE_ZONE_ID`.
+- Verification: the first `main` run after configuration exercises the step and
+  the log shows the purge response with `"success":true`.
