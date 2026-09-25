@@ -3,7 +3,7 @@ id: ticket-003
 plan: site-observability
 repo: marslabs.dev
 phase: 1
-status: planned
+status: done
 depends_on: [ticket-001, ticket-002]
 ---
 
@@ -71,3 +71,17 @@ query, pasted as a table into the runbook.
   property.
 - **Rollback**: remove the `TXT` record in Cloudflare and delete the baseline
   section; no site code or build output changes.
+
+## Result
+
+- Property `marslabs.dev` verified in Google Search Console with a DNS `TXT`
+  record; `Resolve-DnsName` confirms
+  `google-site-verification=P-QPKwVOvWnCyhPm8UlH6_kEgm8JEwtIiJWpjEOzPBI`.
+- Sitemap `https://marslabs.dev/sitemap-index.xml` submitted and read
+  successfully (29 URLs via `sitemap-0.xml`).
+- **Deviation**: Performance shows **no data** as of 2026-09-25 — the property
+  was verified the same day and Search Console backfills afterwards (usually
+  1–3 days). The baseline is recorded as "no data yet" in
+  `docs/runbooks/site-analytics.md` with instructions to fill the 28-day numbers
+  once they appear. Closed with the deviation rather than leaving the plan
+  blocked; capturing the numbers later is a runbook edit, not new work.

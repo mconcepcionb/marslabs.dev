@@ -73,6 +73,9 @@ drop the cross-repo note.
 
 ## Amendments
 
+- **2026-09-25 — ticket-003 baseline.** Search Console has no Performance data on
+  the day of verification; the ticket closes with a documented "no data yet"
+  baseline and a runbook note to record the 28-day figures once GSC backfills.
 - **2026-09-25 — ticket-007 mechanism.** `lablabs/cloudflare_exporter` exposes
   no zone analytics on the free-plan zone (paid adaptive datasets only); the
   ticket ships a stdlib-only Python exporter using the free daily rollup
@@ -104,7 +107,7 @@ drop the cross-repo note.
 | ---------- | ------------------------------------------------------- | ----------- | ----- | -------- | ------------------------ | ------- |
 | ticket-001 | Add field analytics and RUM to the site                 | marslabs.dev | 1    | F1, F2   | -                        | done    |
 | ticket-002 | Add sitemap, robots and canonical URLs                  | marslabs.dev | 1    | F8       | -                        | done    |
-| ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-001, ticket-002   | planned |
+| ticket-003 | Verify Search Console and record the SEO baseline       | marslabs.dev | 1    | F8       | ticket-001, ticket-002   | done    |
 | ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | ticket-013               | done    |
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | done    |
 | ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | done    |

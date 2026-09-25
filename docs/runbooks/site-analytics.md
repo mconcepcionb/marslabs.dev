@@ -32,10 +32,22 @@ the pipeline lands (ticket-003 for SEO, ticket-011 for the full map).
   ```
   If the HTML is cached, wait for the TTL or purge the zone, then repeat.
 
+## Search Console (SEO)
+
+- **Source**: Google Search Console, **domain** property `marslabs.dev`, verified
+  with a DNS `TXT` record (`google-site-verification`) added in Cloudflare.
+- **Reach it**: `https://search.google.com/search-console` → `marslabs.dev`.
+- **Answers**: queries, impressions, clicks, CTR and average position, plus URL
+  inspection and the Core Web Vitals report.
+- **Sitemap**: `https://marslabs.dev/sitemap-index.xml` — submitted, read by
+  Google, 29 URLs.
+- **Baseline (2026-09-25)**: the property was verified that day and Performance
+  shows **no data yet**; Search Console backfills a property after verification
+  (usually 1–3 days). Record the 28-day impressions / clicks / CTR / average
+  position and the top queries here once data appears.
+
 ## Not yet in this runbook
 
-- **SEO** (queries, impressions, CTR, average position) — Google Search Console;
-  recorded by ticket-003.
 - **Edge traffic, cache ratio, origin latency, top paths and tunnel health** —
   the Grafana **Mars Labs** dashboard in the homelab; added by ticket-008 and
   documented by ticket-011.
