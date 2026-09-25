@@ -122,4 +122,4 @@ Cycles are forbidden. The plan README answers "what can I do next?".
 
 | Plan | Goal | Repos | Status | Latest tag |
 | ---- | ---- | ----- | ------ | ---------- |
-| [site-observability](./site-observability/README.md) | Extend the site's self-measurement from build-time lab numbers to field traffic, RUM, edge cache and origin health, surfaced in the homelab Grafana | marslabs.dev, homelab | planned | - |
+| [site-observability](./site-observability/README.md) | Extend the site's self-measurement from build-time lab numbers to field traffic, RUM, edge cache and origin health, surfaced in the homelab Grafana | marslabs.dev, homelab | done | v0.4.0 |

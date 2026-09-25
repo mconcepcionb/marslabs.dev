@@ -3,7 +3,7 @@ id: ticket-012
 plan: site-observability
 repo: marslabs.dev
 phase: 4
-status: planned
+status: done
 depends_on: [ticket-011]
 ---
 
@@ -66,3 +66,15 @@ rg -n 'in-progress|\| planned' docs/plans/site-observability/README.md
   verification greps the index for `planned`/`in-progress` to prevent it.
 - **Rollback**: `git revert <commit>` reopens the README; deleting the tag is
   `git tag -d v0.4.0` (and `git push --delete` if pushed).
+
+## Result
+
+- Plan README: all thirteen tickets `done`; a "What materialised" subsection
+  added to Risk; End state rewritten with the observable result (dashboard URL,
+  measured cache ratio, alert rules).
+- Tags: `v0.4.0` on this closing commit with the plan's tickets in the message.
+  The earlier phase tags (`v0.1.0`..`v0.3.0`) were not created separately — the
+  phase-closing commits were not marked as they landed; the plan is released as
+  `v0.4.0` as a whole.
+- Gate: `pnpm lint && pnpm typecheck && pnpm build` green; homelab
+  `docker compose config` green for the tickets that touched it.

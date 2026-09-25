@@ -116,8 +116,8 @@ drop the cross-repo note.
 | ticket-009 | Alert on Mars Labs health                               | homelab     | 3    | F4       | ticket-008               | done    |
 | ticket-010 | Gate the build on a performance budget                  | marslabs.dev | 4    | F1       | ticket-001               | done    |
 | ticket-011 | Retire the manual CSV exports and document the pipeline | marslabs.dev | 4    | F7       | ticket-003, ticket-008   | done    |
-| ticket-012 | Close the plan                                          | marslabs.dev | 4    | -        | ticket-011               | planned |
-| ticket-013 | Parse sub-second build times in the stats script        | marslabs.dev | 2    | -        | -                        | planned |
+| ticket-012 | Close the plan                                          | marslabs.dev | 4    | -        | ticket-011               | done    |
+| ticket-013 | Parse sub-second build times in the stats script        | marslabs.dev | 2    | -        | -                        | done    |
 
 ## Risk
 
@@ -133,18 +133,35 @@ touches the site's content. The site-side gate is
 `docker compose -f nodes/<node>/compose.yaml config --quiet` with a placeholder
 secrets directory. Both must be green before a phase closes.
 
+### What materialised
+
+- **ticket-007**: the chosen third-party exporter (`lablabs/cloudflare_exporter`)
+  exposes nothing on a free-plan zone; replaced by a custom daily exporter
+  (`httpRequests1dGroups`). Contained to the homelab.
+- **ticket-013**: `pnpm build` was already broken for sub-second builds (a
+  seconds-only regex), found while verifying ticket-004; added and fixed first.
+- **ticket-003**: Search Console had no Performance data at verification time;
+  closed with a documented "no data yet" baseline instead of leaving it open.
+- **ticket-010**: the Playwright headless Chromium exposes no LCP entries, so the
+  budget is FCP + CLS.
+- **ticket-001 / ticket-007**: both mechanisms changed after the operator's
+  input; recorded in Amendments.
+
 ## End state
 
-When the plan is done:
+The plan is delivered:
 
-- The site has Cloudflare Web Analytics enabled (automatic setup) and a canonical
-  sitemap; Search Console shows the query/impression/CTR/position baseline.
-- Cloudflare caches HTML and static assets with an evidence-backed rule, the
-  cache ratio is materially higher, and every deploy purges the edge.
-- Grafana (homelab) has a **Mars Labs** dashboard with edge traffic and cache
-  ratio, Traefik latency and error rates, top paths and status codes from Loki,
-  and cloudflared tunnel health.
-- Alerts fire on origin down, 5xx spikes, tunnel down and a sustained cache-ratio
-  drop.
-- `live/data/*.csv` is gone; `live/` is ignored; `docs/runbooks/site-analytics.md`
-  is the single map from question to source.
+- The site ships sitemap + robots + canonical. Cloudflare Web Analytics is on
+  (automatic setup, all visitors) for audience and field Core Web Vitals; Search
+  Console is a verified property with the sitemap read, Performance backfilling.
+- Cloudflare caches HTML and assets (Cache Rule + origin `s-maxage`), and every
+  deploy purges the edge. The exporter measured a 7-day cache ratio of **21.3 %**
+  when it landed — that window still mixed pre-change days, so it should rise as
+  the window rolls.
+- Grafana (homelab) has the **Mars Labs** dashboard
+  (`https://grafana.fotingo12.com/d/marslabs-health/mars-labs`) with edge,
+  origin, tunnel and log panels, and four alerts (origin down, 5xx, tunnel down,
+  cache ratio < 15 %/24 h) in folder `Homelab Alerts`.
+- CI adds an FCP/CLS performance budget.
+- `live/data/*.csv` is gone, `live/` is ignored, and
+  `docs/runbooks/site-analytics.md` is the single map from question to source.
