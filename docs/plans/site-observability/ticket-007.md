@@ -3,7 +3,7 @@ id: ticket-007
 plan: site-observability
 repo: homelab
 phase: 3
-status: planned
+status: done
 depends_on: []
 ---
 
@@ -20,14 +20,24 @@ the two together explain a request end to end. This exporter is the source for
 the edge panels and the cache-ratio alert (tickets 008, 009) and lets
 `marslabs.dev` delete the CSVs (ticket-011).
 
+**Amendment (2026-09-25).** The draft used `lablabs/cloudflare_exporter`. Tested
+against the free-plan `marslabs.dev` zone it exposes **nothing**: without
+`FREE_TIER` its *zone totals* query is denied (`does not have access to the
+path`, a paid adaptive dataset); with `FREE_TIER=true` it returns no error but
+zero Cloudflare series (also with `SCRAPE_DELAY=0`). Free zones can only use the
+pre-aggregated daily rollup `httpRequests1dGroups`. The ticket therefore ships a
+small stdlib-only Python exporter instead of a third-party image.
+
 ## Scope
 
 **In**
 
-- Add `homelab/stacks/observability/cloudflare-exporter/compose.yaml`: a pinned
-  Cloudflare analytics exporter image (`lablabs/cloudflare-exporter` or
-  equivalent), configured from environment only, exposing Prometheus metrics on
-  one port.
+- Add `homelab/stacks/observability/cloudflare-exporter/exporter.py`: a
+  stdlib-only Python service that queries `httpRequests1dGroups` over a window
+  and exposes Prometheus text at `/metrics` (plus `/health`), on a pinned
+  `python:3.13-alpine` image with the script bind-mounted read-only. Metrics:
+  per-day and windowed requests, bytes, cached bytes, cached requests, unique
+  visitors, page views and cache ratio, plus last-success/last-error gauges.
 - Add `homelab/nodes/server/observability/cloudflare-exporter.override.yaml`
   with the encrypted secret env file and a host-published metrics port, matching
   the cadvisor/node-exporter pattern.
@@ -94,3 +104,20 @@ Cloudflare dashboard and record both in the Result.
 - **Rollback**: `git revert <commit>` removes the stack, the scrape job and the
   CI placeholder; the secret file can be deleted and the token revoked in
   Cloudflare.
+
+## Result
+
+- Homelab commits: `cc8aa52` (stack, override, `.env.example`, include,
+  Prometheus job, CI placeholder), `3a2bbf3` (SOPS secret), then `531b550`,
+  `7e82afc`, `8e334e3` replacing `lablabs/cloudflare_exporter` with the custom
+  `exporter.py`.
+- Two schema/format bugs found and fixed during deploy: the `viewer.zones` node
+  has **no** `name` field (label by zone tag now), and the exposition was missing
+  the label braces. The output now passes `promtool check metrics`.
+- Verification (2026-09-25): `CF_ZONES` zone id `cd1db4f9…`; window (7 d) sample
+  `cloudflare_zone_requests_window=4535`, `cloudflare_zone_bytes_window≈26.8 MB`,
+  `cloudflare_zone_cache_ratio_window=0.213`. Prometheus ingests it:
+  `cloudflare_zone_cache_ratio_window{job="cloudflare",…}=0.213352`.
+- The cache ratio (~21 %) matches the CSV-derived ~25 % ballpark, confirming the
+  metric is sound and that ticket-004 should raise it.
+- Note: the label `zone` is the zone ID; ticket-008 maps it to a display name.

@@ -73,6 +73,10 @@ drop the cross-repo note.
 
 ## Amendments
 
+- **2026-09-25 — ticket-007 mechanism.** `lablabs/cloudflare_exporter` exposes
+  no zone analytics on the free-plan zone (paid adaptive datasets only); the
+  ticket ships a stdlib-only Python exporter using the free daily rollup
+  `httpRequests1dGroups` instead.
 - **2026-09-25 — ticket-013 added.** While verifying ticket-004, `pnpm build`
   failed: `scripts/update-stats.mjs` only parses build times in seconds, and
   Astro prints `949ms` once a build drops under one second. This blocks the gate,
@@ -104,7 +108,7 @@ drop the cross-repo note.
 | ticket-004 | Make the edge cache HTML                                | marslabs.dev | 2    | F3       | ticket-013               | done    |
 | ticket-005 | Purge the edge cache on deploy                          | marslabs.dev | 2    | F3       | ticket-004               | done    |
 | ticket-006 | Expose and scrape cloudflared tunnel metrics            | homelab     | 3    | F6       | -                        | done    |
-| ticket-007 | Add the Cloudflare zone analytics exporter              | homelab     | 3    | F7       | -                        | planned |
+| ticket-007 | Add the Cloudflare zone analytics exporter              | homelab     | 3    | F7       | -                        | done    |
 | ticket-008 | Provision the Mars Labs dashboard                       | homelab     | 3    | F4, F5   | ticket-006, ticket-007   | planned |
 | ticket-009 | Alert on Mars Labs health                               | homelab     | 3    | F4       | ticket-008               | planned |
 | ticket-010 | Gate the build on a performance budget                  | marslabs.dev | 4    | F1       | ticket-001               | planned |
