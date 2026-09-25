@@ -3,7 +3,7 @@ id: ticket-011
 plan: site-observability
 repo: marslabs.dev
 phase: 4
-status: planned
+status: done
 depends_on: [ticket-003, ticket-008]
 ---
 
@@ -84,3 +84,17 @@ pnpm lint && pnpm typecheck && pnpm build
   operator's shell history / Cloudflare dashboard if needed.
 - **Rollback**: `git revert <commit>` restores the CSVs (if they had been
   tracked) and removes the ignore rule; `.gitignore` is trivially editable.
+
+## Result
+
+- `docs/runbooks/site-analytics.md` is now the single map: a question→source
+  table, the Grafana/Cloudflare Web Analytics/Search Console sections, the edge
+  cache pointer, the build-time metrics note, and the **historical CSV
+  snapshot** (16–24 Sep 2026, per day: requests, unique visitors, bytes served,
+  bytes cached, % cached).
+- `live/data/*.csv` deleted and `live/` added to `.gitignore`
+  (`git check-ignore -v live` → `.gitignore:12:live/`).
+- Verification (2026-09-25): no `*.csv` outside unrelated skill data;
+  `rg 'unique_visitors|percent_cached'` finds nothing outside the snapshot
+  (which uses human-readable column names); `git status` no longer lists `live/`;
+  `pnpm lint`, `pnpm typecheck` and `pnpm build` green.

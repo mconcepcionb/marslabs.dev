@@ -7,6 +7,10 @@ dist/
 core.*
 screenshots/
 
+# Exports locales de analytics (sustituidos por el pipeline; ver
+# docs/runbooks/site-analytics.md)
+live/
+
 # Tooling local de agentes (skills instalados y snapshots de capturas)
 .agents/
 .opencode/
